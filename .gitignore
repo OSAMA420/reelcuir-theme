@@ -1,0 +1,6 @@
+# Backups aur export files git mein nahi jayengi
+*.zip
+*.dat
+*.sql
+.DS_Store
+Thumbs.db
