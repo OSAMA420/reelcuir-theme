@@ -31,6 +31,16 @@ add_action( 'wp_enqueue_scripts', function () {
 }, 20 );
 
 /**
+ * Cart badge: CDN cached page mein purana count hota hai. WooCommerce cart-fragments
+ * har page par load karo taake header ka count (.js_count_bag_item) asli cart se update ho.
+ */
+add_action( 'wp_enqueue_scripts', function () {
+	if ( function_exists( 'WC' ) && wp_script_is( 'wc-cart-fragments', 'registered' ) ) {
+		wp_enqueue_script( 'wc-cart-fragments' );
+	}
+}, 30 );
+
+/**
  * Cart/Checkout speed: ye pages WooCommerce blocks se bante hain, un par slider,
  * Instagram, contact form, mega menu aur classic cart ki files ka koi kaam nahi.
  */

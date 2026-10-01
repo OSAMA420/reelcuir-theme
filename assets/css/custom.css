@@ -1,1 +1,10 @@
 /* Reel Cuir custom styles */
+
+/*
+ * Cart badge: Mixtas `body-loaded` class lagne tak .count-badge par
+ * content-visibility: hidden lagata hai. Gola dikhta hai, number nahi,
+ * is liye slow pages par "kaala dot" nazar aata tha.
+ */
+body:not(.elementor-editor-active):not(.body-loaded) .count-badge {
+	content-visibility: visible !important;
+}
