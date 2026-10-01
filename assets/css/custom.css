@@ -8,3 +8,255 @@
 body:not(.elementor-editor-active):not(.body-loaded) .count-badge {
 	content-visibility: visible !important;
 }
+
+/* =========================================================
+ * Checkout (WooCommerce blocks) – Réel Cuir look
+ * ========================================================= */
+.woocommerce-checkout .wp-block-woocommerce-checkout {
+	--rc-ink: #111111;
+	--rc-gold: #c8a96a;
+	--rc-gold-soft: rgba(200, 169, 106, 0.18);
+	--rc-cream: #f8f5f0;
+	--rc-line: #e6e1da;
+	--rc-muted: #77706a;
+	--rc-ok: #2e7d4f;
+	--rc-radius: 12px;
+}
+
+/* Steps: numbered cards */
+.woocommerce-checkout .wc-block-checkout__main {
+	counter-reset: rc-step;
+}
+.woocommerce-checkout .wc-block-checkout__main .wc-block-components-checkout-step:not(.wc-block-checkout__order-notes) {
+	counter-increment: rc-step;
+	background: #fff;
+	border: 1px solid var(--rc-line);
+	border-radius: var(--rc-radius);
+	padding: 24px 24px 8px;
+	margin-bottom: 20px;
+	transition: border-color .25s, box-shadow .25s;
+}
+.woocommerce-checkout .wc-block-checkout__main .wc-block-components-checkout-step:not(.wc-block-checkout__order-notes):focus-within {
+	border-color: var(--rc-gold);
+	box-shadow: 0 8px 28px rgba(17, 17, 17, 0.06);
+}
+.woocommerce-checkout .wc-block-components-checkout-step__heading {
+	display: flex;
+	align-items: center;
+	margin: 0 0 16px;
+}
+.woocommerce-checkout .wc-block-checkout__main .wc-block-components-checkout-step:not(.wc-block-checkout__order-notes) .wc-block-components-checkout-step__title::before {
+	content: counter(rc-step);
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	width: 30px;
+	height: 30px;
+	margin-right: 12px;
+	border-radius: 50%;
+	background: var(--rc-ink);
+	color: #fff;
+	font-size: 14px;
+	font-weight: 600;
+	vertical-align: middle;
+	transition: background .25s;
+}
+.woocommerce-checkout .wc-block-checkout__main .wc-block-components-checkout-step:not(.wc-block-checkout__order-notes)[data-rc-done="1"] .wc-block-components-checkout-step__title::before {
+	content: "✓";
+	background: var(--rc-gold);
+}
+.woocommerce-checkout .wc-block-components-checkout-step__title {
+	font-size: 19px;
+	letter-spacing: .2px;
+}
+/* Pehle step ka number aur border card ke andar hi rahe */
+.woocommerce-checkout .wc-block-components-checkout-step__container::after,
+.woocommerce-checkout .wc-block-components-checkout-step::before {
+	display: none !important;
+}
+
+/* Inputs */
+.woocommerce-checkout .wc-block-components-text-input input,
+.woocommerce-checkout .wc-block-components-combobox .wc-block-components-combobox-control input,
+.woocommerce-checkout .wc-blocks-components-select .wc-blocks-components-select__select,
+.woocommerce-checkout .wc-block-components-textarea {
+	border: 1px solid var(--rc-line) !important;
+	border-radius: 10px !important;
+	background: #fff !important;
+	transition: border-color .2s, box-shadow .2s;
+}
+.woocommerce-checkout .wc-block-components-text-input input:hover,
+.woocommerce-checkout .wc-blocks-components-select .wc-blocks-components-select__select:hover {
+	border-color: #cfc7bc !important;
+}
+.woocommerce-checkout .wc-block-components-text-input input:focus,
+.woocommerce-checkout .wc-blocks-components-select .wc-blocks-components-select__select:focus,
+.woocommerce-checkout .wc-block-components-textarea:focus {
+	border-color: var(--rc-gold) !important;
+	box-shadow: 0 0 0 3px var(--rc-gold-soft) !important;
+	outline: none !important;
+}
+.woocommerce-checkout .wc-block-components-text-input.is-active label,
+.woocommerce-checkout .wc-block-components-text-input label {
+	color: var(--rc-muted);
+}
+/* Sahi bhara hua field: green tick */
+.woocommerce-checkout .wc-block-components-text-input[data-rc-valid="1"] input {
+	padding-right: 40px;
+	background: #fff url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='18' height='18' viewBox='0 0 24 24' fill='none' stroke='%232e7d4f' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='20 6 9 17 4 12'/%3E%3C/svg%3E") no-repeat right 14px center !important;
+}
+.woocommerce-checkout .wc-block-components-text-input.has-error input {
+	border-color: #c0392b !important;
+	box-shadow: 0 0 0 3px rgba(192, 57, 43, .12) !important;
+}
+
+/* Payment options as cards */
+.woocommerce-checkout .wc-block-components-radio-control-accordion-option {
+	border: 1px solid var(--rc-line) !important;
+	border-radius: 10px !important;
+	margin-bottom: 10px;
+	box-shadow: none !important;
+	transition: border-color .2s, background .2s;
+}
+.woocommerce-checkout .wc-block-components-radio-control-accordion-option:hover {
+	border-color: #cfc7bc !important;
+}
+.woocommerce-checkout .wc-block-components-radio-control-accordion-option--checked-option-highlighted {
+	border-color: var(--rc-gold) !important;
+	background: var(--rc-cream);
+	box-shadow: 0 0 0 1px var(--rc-gold) inset !important;
+}
+.woocommerce-checkout .wc-block-components-radio-control__input:checked {
+	border-color: var(--rc-ink) !important;
+}
+.woocommerce-checkout .wc-block-components-radio-control__input:checked::before {
+	background: var(--rc-gold) !important;
+}
+.woocommerce-checkout .wc-block-components-radio-control__option {
+	padding-top: 16px;
+	padding-bottom: 16px;
+}
+.woocommerce-checkout .wc-block-components-radio-control__label {
+	font-weight: 600;
+}
+
+/* Checkbox */
+.woocommerce-checkout .wc-block-components-checkbox__input:checked {
+	background: var(--rc-ink) !important;
+	border-color: var(--rc-ink) !important;
+}
+.woocommerce-checkout .wc-block-components-checkbox__mark {
+	fill: #fff !important;
+}
+
+/* Place order button */
+.woocommerce-checkout .wc-block-components-checkout-place-order-button {
+	min-height: 58px;
+	border-radius: 999px !important;
+	background: var(--rc-ink) !important;
+	color: #fff !important;
+	font-size: 15px;
+	font-weight: 600;
+	letter-spacing: 1.5px;
+	text-transform: uppercase;
+	transition: background .25s, transform .15s, box-shadow .25s;
+}
+.woocommerce-checkout .wc-block-components-checkout-place-order-button:not(:disabled):hover {
+	background: var(--rc-gold) !important;
+	color: var(--rc-ink) !important;
+	box-shadow: 0 10px 24px rgba(200, 169, 106, .35);
+}
+.woocommerce-checkout .wc-block-components-checkout-place-order-button:not(:disabled):active {
+	transform: scale(.99);
+}
+.woocommerce-checkout .wc-block-components-checkout-place-order-button .wc-block-components-button__text {
+	display: inline-flex !important;
+	flex-direction: row;
+	align-items: center;
+	justify-content: center;
+}
+.woocommerce-checkout .wc-block-components-checkout-place-order-button .wc-block-components-button__text::before {
+	content: "";
+	display: inline-block;
+	width: 15px;
+	height: 15px;
+	margin-right: 10px;
+	vertical-align: -2px;
+	background: currentColor;
+	-webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M17 9V7a5 5 0 0 0-10 0v2H5v13h14V9h-2zm-8 0V7a3 3 0 0 1 6 0v2H9z'/%3E%3C/svg%3E") no-repeat center / contain;
+	mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M17 9V7a5 5 0 0 0-10 0v2H5v13h14V9h-2zm-8 0V7a3 3 0 0 1 6 0v2H9z'/%3E%3C/svg%3E") no-repeat center / contain;
+}
+.woocommerce-checkout .wc-block-checkout__terms {
+	color: var(--rc-muted);
+	font-size: 13px;
+	text-align: center;
+	border-top: 0 !important;
+}
+
+/* Trust strip (custom.js se aata hai) */
+.rc-trust {
+	display: grid;
+	grid-template-columns: repeat(3, 1fr);
+	gap: 10px;
+	margin: 16px 0 8px;
+	padding: 0;
+	list-style: none;
+}
+.rc-trust li {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	gap: 6px;
+	padding: 12px 8px;
+	border-radius: 10px;
+	background: #f8f5f0;
+	color: #3a3530;
+	font-size: 12px;
+	line-height: 1.3;
+	text-align: center;
+}
+.rc-trust svg {
+	width: 20px;
+	height: 20px;
+	stroke: #c8a96a;
+}
+
+/* Order summary */
+.woocommerce-checkout .wp-block-woocommerce-checkout-order-summary-block {
+	background: var(--rc-cream);
+	border: 1px solid var(--rc-line) !important;
+	border-radius: var(--rc-radius) !important;
+	overflow: hidden;
+}
+.woocommerce-checkout .wc-block-checkout__sidebar .wc-block-components-panel,
+.woocommerce-checkout .wc-block-checkout__sidebar .wc-block-components-totals-wrapper {
+	border-color: var(--rc-line) !important;
+}
+.woocommerce-checkout .wc-block-components-order-summary-item__image img {
+	border-radius: 8px;
+	background: #fff;
+}
+.woocommerce-checkout .wc-block-components-order-summary-item__quantity {
+	background: var(--rc-ink) !important;
+	color: #fff !important;
+	border: 2px solid var(--rc-cream) !important;
+}
+.woocommerce-checkout .wc-block-components-order-summary-item__description .wc-block-components-product-metadata__description {
+	display: none; /* demo products ki lambi short description summary mein nahi */
+}
+.woocommerce-checkout .wc-block-components-totals-footer-item .wc-block-components-totals-item__value,
+.woocommerce-checkout .wc-block-components-totals-footer-item .wc-block-components-totals-item__label {
+	font-family: Outfit, serif;
+	font-size: 22px;
+	font-weight: 600;
+}
+
+@media (max-width: 767px) {
+	.woocommerce-checkout .wc-block-checkout__main .wc-block-components-checkout-step:not(.wc-block-checkout__order-notes) {
+		padding: 18px 16px 4px;
+	}
+	.rc-trust li {
+		font-size: 11px;
+		padding: 10px 6px;
+	}
+}

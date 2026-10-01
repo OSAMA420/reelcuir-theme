@@ -56,3 +56,92 @@
 	setTimeout(unlockOverlayInputs, 1300);
 	setTimeout(unlockOverlayInputs, 3100);
 })();
+
+/*
+ * Checkout: live feedback.
+ * - Sahi bhare field par tick (data-rc-valid)
+ * - Step ke saare zaroori fields bhar jayen to number ki jagah ✓ (data-rc-done)
+ * - Place Order ke neeche trust strip
+ * Checkout React se banta hai aur re-render hota rehta hai, is liye classes ki jagah
+ * data attributes use kiye hain aur MutationObserver se dobara lagate hain.
+ */
+(function () {
+	'use strict';
+
+	if (!document.body.classList.contains('woocommerce-checkout')) return;
+
+	var ICON = {
+		lock: '<svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="10" width="16" height="11" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></svg>',
+		returns: '<svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 3-6.7"/><polyline points="3 3 3 9 9 9"/></svg>',
+		leather: '<svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l7 3v6c0 4.5-3 7.5-7 9-4-1.5-7-4.5-7-9V6z"/><polyline points="9 12 11 14 15 10"/></svg>'
+	};
+
+	function fieldValid(input) {
+		if (!input.value || !input.value.trim()) return false;
+		var wrap = input.closest('.wc-block-components-text-input');
+		if (wrap && wrap.classList.contains('has-error')) return false;
+		return input.checkValidity();
+	}
+
+	function markField(input) {
+		var wrap = input.closest('.wc-block-components-text-input');
+		if (!wrap) return;
+		if (fieldValid(input)) {
+			wrap.setAttribute('data-rc-valid', '1');
+		} else {
+			wrap.removeAttribute('data-rc-valid');
+		}
+	}
+
+	function stepDone(step) {
+		var fields = step.querySelectorAll('input[required], select[required], input[aria-required="true"], select[aria-required="true"]');
+		if (!fields.length) {
+			// Payment step: koi option select ho to done
+			return !!step.querySelector('.wc-block-components-radio-control__input:checked');
+		}
+		for (var i = 0; i < fields.length; i++) {
+			var f = fields[i];
+			if (f.offsetParent === null) continue;
+			if (f.tagName === 'SELECT' ? !f.value : !fieldValid(f)) return false;
+		}
+		return true;
+	}
+
+	function update() {
+		document.querySelectorAll('.wc-block-checkout__main .wc-block-components-text-input input').forEach(markField);
+		document.querySelectorAll('.wc-block-checkout__main .wc-block-components-checkout-step:not(.wc-block-checkout__order-notes)').forEach(function (step) {
+			if (stepDone(step)) {
+				step.setAttribute('data-rc-done', '1');
+			} else {
+				step.removeAttribute('data-rc-done');
+			}
+		});
+		addTrust();
+	}
+
+	function addTrust() {
+		var actions = document.querySelector('.wc-block-checkout__actions');
+		if (!actions || actions.parentNode.querySelector('.rc-trust')) return;
+		var ul = document.createElement('ul');
+		ul.className = 'rc-trust';
+		ul.innerHTML =
+			'<li>' + ICON.lock + '<span>Secure checkout</span></li>' +
+			'<li>' + ICON.returns + '<span>30-day returns &amp; exchanges</span></li>' +
+			'<li>' + ICON.leather + '<span>100% genuine leather</span></li>';
+		actions.parentNode.insertBefore(ul, actions.nextSibling);
+	}
+
+	var timer = null;
+	function schedule() {
+		clearTimeout(timer);
+		timer = setTimeout(update, 120);
+	}
+
+	document.addEventListener('input', schedule, true);
+	document.addEventListener('change', schedule, true);
+	document.addEventListener('focusout', schedule, true);
+
+	var root = document.querySelector('.wp-block-woocommerce-checkout') || document.body;
+	new MutationObserver(schedule).observe(root, { childList: true, subtree: true });
+	schedule();
+})();
