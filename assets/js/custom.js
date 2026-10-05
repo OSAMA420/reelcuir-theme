@@ -84,10 +84,24 @@
 		});
 	}
 
+	// Elementor page load ke baad header menu dobara banata hai, is liye load par
+	// aur header badalne par bhi chalao.
+	var timer = null;
+	function schedule() {
+		clearTimeout(timer);
+		timer = setTimeout(hideEmpty, 50);
+	}
+
 	if (document.readyState === 'loading') {
 		document.addEventListener('DOMContentLoaded', hideEmpty);
 	} else {
 		hideEmpty();
+	}
+	window.addEventListener('load', hideEmpty);
+
+	var header = document.querySelector('.elementor-location-header');
+	if (header) {
+		new MutationObserver(schedule).observe(header, { childList: true, subtree: true });
 	}
 })();
 
