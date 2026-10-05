@@ -58,6 +58,40 @@
 })();
 
 /*
+ * Header menu: khaali categories ke links chhupao (list functions.php se aati hai).
+ * Sab se kareeb wala item chhupta hai: icon-list item, button/heading widget,
+ * ya top-level menu item. Is liye dropdown ka koi andar wala link poora menu nahi chhupata.
+ */
+(function () {
+	'use strict';
+
+	var empty = window.rcEmptyCats || [];
+	if (!empty.length) return;
+
+	function slugOf(href) {
+		var m = /\/product-category\/(.+?)\/?(?:[?#].*)?$/.exec(href || '');
+		if (!m) return null;
+		var parts = m[1].split('/');
+		return parts[parts.length - 1];
+	}
+
+	function hideEmpty() {
+		document.querySelectorAll('.elementor-location-header a[href*="/product-category/"]').forEach(function (a) {
+			if (empty.indexOf(slugOf(a.getAttribute('href'))) === -1) return;
+			var item = a.closest('.elementor-icon-list-item, .elementor-widget, .e-n-menu-item, .menu-item');
+			(item || a).style.display = 'none';
+			(item || a).setAttribute('data-rc-empty-cat', '1');
+		});
+	}
+
+	if (document.readyState === 'loading') {
+		document.addEventListener('DOMContentLoaded', hideEmpty);
+	} else {
+		hideEmpty();
+	}
+})();
+
+/*
  * Checkout: live feedback.
  * - Sahi bhare field par tick (data-rc-valid)
  * - Step ke saare zaroori fields bhar jayen to number ki jagah ✓ (data-rc-done)

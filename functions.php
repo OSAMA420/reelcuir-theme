@@ -31,6 +31,28 @@ add_action( 'wp_enqueue_scripts', function () {
 }, 20 );
 
 /**
+ * Header menu: khaali product categories (0 published products) ki list JS ko do,
+ * taake custom.js header se un ke links chhupa de. Product aate hi link wapas aa jata hai.
+ */
+add_action( 'wp_enqueue_scripts', function () {
+	$terms = get_terms( array(
+		'taxonomy'   => 'product_cat',
+		'hide_empty' => false,
+		'fields'     => 'all',
+	) );
+	if ( is_wp_error( $terms ) ) {
+		return;
+	}
+	$empty = array();
+	foreach ( $terms as $term ) {
+		if ( 0 === (int) $term->count ) {
+			$empty[] = $term->slug;
+		}
+	}
+	wp_add_inline_script( 'mixtas-child', 'window.rcEmptyCats = ' . wp_json_encode( $empty ) . ';', 'before' );
+}, 25 );
+
+/**
  * Cart badge: CDN cached page mein purana count hota hai. WooCommerce cart-fragments
  * har page par load karo taake header ka count (.js_count_bag_item) asli cart se update ho.
  */
