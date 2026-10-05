@@ -66,7 +66,31 @@
 	'use strict';
 
 	var empty = window.rcEmptyCats || [];
-	if (!empty.length) return;
+
+	// Mega menu promo cards: [chhota text, heading, button, link]. Photos custom.css mein hain.
+	var CARDS = {
+		a2bc170: ['Bestselling Style', 'Cafe Racer Edit', 'Explore', '/product-category/cafe-racer-jackets/'],
+		db6bc72: ['New In', 'Women’s Bomber Edit', 'Discover', '/product-category/women/women-leather-jackets/']
+	};
+
+	function setText(el, text) {
+		if (el && el.textContent.trim() !== text) el.textContent = text;
+	}
+
+	function rewriteCards() {
+		Object.keys(CARDS).forEach(function (id) {
+			var c = CARDS[id];
+			document.querySelectorAll('.elementor-location-header .elementor-element-' + id).forEach(function (card) {
+				var titles = card.querySelectorAll('.elementor-heading-title');
+				setText(titles[0], c[0]);
+				setText(titles[1] && (titles[1].querySelector('a') || titles[1]), c[1]);
+				setText(titles[2] && (titles[2].querySelector('a') || titles[2]), c[2]);
+				card.querySelectorAll('a[href]').forEach(function (a) {
+					if (a.getAttribute('href').indexOf(c[3]) === -1) a.setAttribute('href', c[3]);
+				});
+			});
+		});
+	}
 
 	function slugOf(href) {
 		var m = /\/product-category\/(.+?)\/?(?:[?#].*)?$/.exec(href || '');
@@ -76,6 +100,8 @@
 	}
 
 	function hideEmpty() {
+		rewriteCards();
+		if (!empty.length) return;
 		document.querySelectorAll('.elementor-location-header a[href*="/product-category/"]').forEach(function (a) {
 			if (empty.indexOf(slugOf(a.getAttribute('href'))) === -1) return;
 			var item = a.closest('.elementor-icon-list-item, .elementor-widget, .e-n-menu-item, .menu-item');

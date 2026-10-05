@@ -10,6 +10,43 @@ body:not(.elementor-editor-active):not(.body-loaded) .count-badge {
 }
 
 /* =========================================================
+ * Header mega menu promo cards (Elementor header 1043)
+ * Demo photos ki jagah asli products. Product photos safed background par hain,
+ * is liye cream card (multiply se safed hissa cream ho jata hai), jacket upar beech mein,
+ * aur neeche dark gradient taake text saaf parha jaye.
+ * ========================================================= */
+body .elementor-1043 .elementor-element.elementor-element-dde13f3,
+body .elementor-1043 .elementor-element.elementor-element-a2bc170,
+body .elementor-1043 .elementor-element.elementor-element-0b5d79b,
+body .elementor-1043 .elementor-element.elementor-element-db6bc72 {
+	background-color: #ece6dd !important;
+	background-repeat: no-repeat !important;
+	background-size: auto 66% !important;
+	background-position: center top 12% !important;
+	background-blend-mode: multiply;
+	overflow: hidden;
+}
+body .elementor-1043 .elementor-element.elementor-element-dde13f3 {
+	background-image: url("/wp-content/uploads/2026/10/rc-29-1.jpg") !important;
+}
+body .elementor-1043 .elementor-element.elementor-element-a2bc170 {
+	background-image: url("/wp-content/uploads/2026/10/rc-16-1.jpg") !important;
+}
+body .elementor-1043 .elementor-element.elementor-element-0b5d79b {
+	background-image: url("/wp-content/uploads/2026/10/rc-43-1.jpg") !important;
+}
+body .elementor-1043 .elementor-element.elementor-element-db6bc72 {
+	background-image: url("/wp-content/uploads/2026/10/rc-45-1.jpg") !important;
+}
+body .elementor-1043 .elementor-element.elementor-element-dde13f3::before,
+body .elementor-1043 .elementor-element.elementor-element-a2bc170::before,
+body .elementor-1043 .elementor-element.elementor-element-0b5d79b::before,
+body .elementor-1043 .elementor-element.elementor-element-db6bc72::before {
+	background: linear-gradient(0deg, rgba(17, 17, 17, .88) 0%, rgba(17, 17, 17, .55) 30%, rgba(17, 17, 17, 0) 52%) !important;
+	opacity: 1 !important;
+}
+
+/* =========================================================
  * Checkout (WooCommerce blocks) – Réel Cuir look
  * ========================================================= */
 .woocommerce-checkout .wp-block-woocommerce-checkout {
