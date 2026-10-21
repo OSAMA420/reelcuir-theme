@@ -73,6 +73,39 @@
 		db6bc72: ['New In', 'Women’s Bomber Edit', 'Discover', '/product-category/women/women-leather-jackets/']
 	};
 
+	// Desktop nested menu (Elementor) mein extra top-level links. Mobile/side menu WordPress
+	// ke "Main Menu" (id 20) se aata hai, wahan ye items wp-admin mein jode gaye hain.
+	var NAV_ITEMS = [
+		{ key: 'new', text: 'NEW ARRIVALS', href: '/new-arrivals/', first: true },
+		{ key: 'sale', text: 'SALE', href: '/sale/', first: false }
+	];
+
+	function addNavItems() {
+		document.querySelectorAll('.elementor-location-header ul.e-n-menu-heading').forEach(function (ul) {
+			var template = Array.prototype.find.call(ul.children, function (li) {
+				return !li.querySelector('.e-n-menu-content') && li.querySelector('a.e-n-menu-title-container') && !li.hasAttribute('data-rc-nav');
+			});
+			if (!template) return;
+			NAV_ITEMS.forEach(function (item) {
+				if (ul.querySelector('[data-rc-nav="' + item.key + '"]')) return;
+				var li = template.cloneNode(true);
+				li.setAttribute('data-rc-nav', item.key);
+				li.removeAttribute('data-rc-empty-cat');
+				li.style.display = '';
+				li.querySelectorAll('[id]').forEach(function (el) { el.removeAttribute('id'); });
+				var a = li.querySelector('a.e-n-menu-title-container');
+				a.setAttribute('href', item.href);
+				a.removeAttribute('data-focus-index');
+				li.querySelector('.e-n-menu-title-text').textContent = item.text;
+				if (item.first) {
+					ul.insertBefore(li, ul.firstElementChild);
+				} else {
+					ul.appendChild(li);
+				}
+			});
+		});
+	}
+
 	function setText(el, text) {
 		if (el && el.textContent.trim() !== text) el.textContent = text;
 	}
@@ -101,6 +134,7 @@
 
 	function hideEmpty() {
 		rewriteCards();
+		addNavItems();
 		if (!empty.length) return;
 		document.querySelectorAll('.elementor-location-header a[href*="/product-category/"]').forEach(function (a) {
 			if (empty.indexOf(slugOf(a.getAttribute('href'))) === -1) return;

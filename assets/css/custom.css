@@ -46,6 +46,15 @@ body .elementor-1043 .elementor-element.elementor-element-db6bc72::before {
 	opacity: 1 !important;
 }
 
+/* Header menu: SALE sunehre rang mein (item custom.js se aata hai) */
+.elementor-location-header [data-rc-nav="sale"] .e-n-menu-title-text {
+	color: #b08d4f;
+	font-weight: 600;
+}
+.elementor-location-header [data-rc-nav="sale"] a:hover .e-n-menu-title-text {
+	color: #111;
+}
+
 /* =========================================================
  * Checkout (WooCommerce blocks) – Réel Cuir look
  * ========================================================= */
