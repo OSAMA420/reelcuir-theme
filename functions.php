@@ -53,6 +53,22 @@ add_action( 'wp_enqueue_scripts', function () {
 }, 25 );
 
 /**
+ * New Arrivals page: discount (sale) wale products yahan nahi, woh Sale page par hain.
+ * Page ke shortcode mein class="rc-new-arrivals" laga hai.
+ */
+add_filter( 'woocommerce_shortcode_products_query', function ( $query_args, $attributes ) {
+	if ( empty( $attributes['class'] ) || false === strpos( $attributes['class'], 'rc-new-arrivals' ) ) {
+		return $query_args;
+	}
+	$on_sale = wc_get_product_ids_on_sale();
+	if ( $on_sale ) {
+		$exclude = isset( $query_args['post__not_in'] ) ? (array) $query_args['post__not_in'] : array();
+		$query_args['post__not_in'] = array_merge( $exclude, $on_sale );
+	}
+	return $query_args;
+}, 10, 2 );
+
+/**
  * Cart badge: CDN cached page mein purana count hota hai. WooCommerce cart-fragments
  * har page par load karo taake header ka count (.js_count_bag_item) asli cart se update ho.
  */
