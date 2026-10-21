@@ -84,6 +84,90 @@ add_action( 'wp_body_open', function () {
 } );
 
 /**
+ * /new-arrivals/ aur /sale/ ko shop archive ka view banao, taake shop wala sidebar
+ * (filters, sorting, pagination) yahan bhi chale. Shortcode pages par filters kaam nahi karte.
+ *  - new:  sab se naye pehle, sale wale products nahi
+ *  - sale: sirf sale wale products
+ * Rewrite rules page slugs se pehle ('top') lagti hain. Purane pages (3071, 3072) fallback hain.
+ */
+define( 'RC_SHOP_VIEWS', array(
+	'new-arrivals' => array( 'view' => 'new', 'title' => 'New Arrivals' ),
+	'sale'         => array( 'view' => 'sale', 'title' => 'Sale' ),
+) );
+
+add_filter( 'query_vars', function ( $vars ) {
+	$vars[] = 'rc_view';
+	return $vars;
+} );
+
+add_action( 'init', function () {
+	foreach ( RC_SHOP_VIEWS as $slug => $cfg ) {
+		add_rewrite_rule( '^' . $slug . '/?$', 'index.php?post_type=product&rc_view=' . $cfg['view'], 'top' );
+		add_rewrite_rule( '^' . $slug . '/page/([0-9]{1,})/?$', 'index.php?post_type=product&rc_view=' . $cfg['view'] . '&paged=$matches[1]', 'top' );
+	}
+	if ( get_option( 'rc_rewrite_version' ) !== '1' ) {
+		flush_rewrite_rules( false );
+		update_option( 'rc_rewrite_version', '1' );
+	}
+} );
+
+function rc_shop_view() {
+	$view = get_query_var( 'rc_view' );
+	foreach ( RC_SHOP_VIEWS as $cfg ) {
+		if ( $cfg['view'] === $view ) {
+			return $cfg;
+		}
+	}
+	return null;
+}
+
+add_action( 'pre_get_posts', function ( $q ) {
+	if ( is_admin() || ! $q->is_main_query() || ! $q->is_post_type_archive( 'product' ) ) {
+		return;
+	}
+	$view = $q->get( 'rc_view' );
+	if ( 'new' === $view ) {
+		if ( empty( $_GET['orderby'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification
+			$q->set( 'orderby', 'date' );
+			$q->set( 'order', 'DESC' );
+		}
+		$on_sale = wc_get_product_ids_on_sale();
+		if ( $on_sale ) {
+			$q->set( 'post__not_in', array_merge( (array) $q->get( 'post__not_in' ), $on_sale ) );
+		}
+	} elseif ( 'sale' === $view ) {
+		$on_sale = wc_get_product_ids_on_sale();
+		$q->set( 'post__in', $on_sale ? $on_sale : array( 0 ) );
+	}
+}, 20 );
+
+// Title, browser title aur breadcrumb mein "Shop" ki jagah view ka naam.
+add_filter( 'woocommerce_page_title', function ( $title ) {
+	$cfg = rc_shop_view();
+	return $cfg ? $cfg['title'] : $title;
+} );
+add_filter( 'document_title_parts', function ( $parts ) {
+	$cfg = rc_shop_view();
+	if ( $cfg ) {
+		$parts['title'] = $cfg['title'];
+	}
+	return $parts;
+} );
+add_filter( 'woocommerce_get_breadcrumb', function ( $crumbs ) {
+	$cfg = rc_shop_view();
+	if ( $cfg && $crumbs ) {
+		$crumbs[ count( $crumbs ) - 1 ] = array( $cfg['title'], '' );
+	}
+	return $crumbs;
+} );
+// Shop page ka description ("This is where you can browse...") in views par nahi.
+add_action( 'woocommerce_archive_description', function () {
+	if ( rc_shop_view() ) {
+		remove_action( 'woocommerce_archive_description', 'woocommerce_product_archive_description', 10 );
+	}
+}, 1 );
+
+/**
  * New Arrivals page: discount (sale) wale products yahan nahi, woh Sale page par hain.
  * Page ke shortcode mein class="rc-new-arrivals" laga hai.
  */
