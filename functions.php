@@ -142,9 +142,22 @@ add_action( 'pre_get_posts', function ( $q ) {
 }, 20 );
 
 // Title, browser title aur breadcrumb mein "Shop" ki jagah view ka naam.
-add_filter( 'woocommerce_page_title', function ( $title ) {
+// Header ka title/breadcrumb/description Kitify widgets dete hain:
+// get_the_archive_title(), post_type_archive_title filter, get_the_archive_description().
+// Browser title All in One SEO deta hai (aioseo_title).
+function rc_view_title( $title ) {
 	$cfg = rc_shop_view();
 	return $cfg ? $cfg['title'] : $title;
+}
+add_filter( 'woocommerce_page_title', 'rc_view_title' );
+add_filter( 'get_the_archive_title', 'rc_view_title', 99 );
+add_filter( 'post_type_archive_title', 'rc_view_title', 99 );
+add_filter( 'get_the_archive_description', function ( $desc ) {
+	return rc_shop_view() ? '' : $desc;
+}, 99 );
+add_filter( 'aioseo_title', function ( $title ) {
+	$cfg = rc_shop_view();
+	return $cfg ? $cfg['title'] . ' - ' . get_bloginfo( 'name' ) : $title;
 } );
 add_filter( 'document_title_parts', function ( $parts ) {
 	$cfg = rc_shop_view();
