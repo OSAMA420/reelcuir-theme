@@ -53,6 +53,37 @@ add_action( 'wp_enqueue_scripts', function () {
 }, 25 );
 
 /**
+ * Top promo banner: har page par header se upar (theme ka wp_body_open, site-wrapper se pehle).
+ * Scroll par baaki header ke saath upar chala jata hai; Elementor ka menu (3565a34) sticky rehta hai.
+ * Images Media Library mein hain: desktop 1920x220 (ID 3078), mobile 800x300 (ID 3079).
+ * Banner badalna ho to sirf ye IDs aur link badlein.
+ */
+define( 'RC_TOP_BANNER', array(
+	'desktop' => 3078,
+	'mobile'  => 3079,
+	'link'    => '/new-arrivals/',
+	'alt'     => 'New season arrivals - authentic leather jackets for men and women',
+) );
+
+add_action( 'wp_body_open', function () {
+	if ( is_admin() ) {
+		return;
+	}
+	$desktop = wp_get_attachment_image_url( RC_TOP_BANNER['desktop'], 'full' );
+	$mobile  = wp_get_attachment_image_url( RC_TOP_BANNER['mobile'], 'full' );
+	if ( ! $desktop ) {
+		return;
+	}
+	printf(
+		'<a class="rc-top-banner" href="%1$s"><picture>%2$s<img src="%3$s" alt="%4$s" width="1920" height="220" fetchpriority="high"></picture></a>',
+		esc_url( home_url( RC_TOP_BANNER['link'] ) ),
+		$mobile ? '<source media="(max-width: 767px)" srcset="' . esc_url( $mobile ) . '" width="800" height="300">' : '',
+		esc_url( $desktop ),
+		esc_attr( RC_TOP_BANNER['alt'] )
+	);
+} );
+
+/**
  * New Arrivals page: discount (sale) wale products yahan nahi, woh Sale page par hain.
  * Page ke shortcode mein class="rc-new-arrivals" laga hai.
  */

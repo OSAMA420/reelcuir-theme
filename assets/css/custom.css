@@ -46,6 +46,18 @@ body .elementor-1043 .elementor-element.elementor-element-db6bc72::before {
 	opacity: 1 !important;
 }
 
+/* Top promo banner (functions.php, wp_body_open) */
+.rc-top-banner {
+	display: block;
+	line-height: 0;
+	background: #141210;
+}
+.rc-top-banner img {
+	display: block;
+	width: 100%;
+	height: auto;
+}
+
 /* =========================================================
  * Shortcode product lists (New Arrivals, Sale pages): theme sirf shop page par
  * columns lagata hai, yahan har product poori width le raha tha. Proper grid.
