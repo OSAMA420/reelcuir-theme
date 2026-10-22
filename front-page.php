@@ -17,6 +17,29 @@ const RC_HOME_ELEMENTOR_PAGE = 1158;      // purana Elementor homepage
 // Home v4 ke upar wale containers (rev slider, 4 cards, Best Selling, category, New arrivals): inki jagah hamare sections hain
 const RC_HOME_ELEMENTOR_SKIP = array( 'f975fdb', '8586ff5', 'e4b3448', '13d3d5b', 'd51c6f8' );
 
+/**
+ * Elementor HTML se diye gaye data-id wale <div> (poora, andar ke saath) hata do.
+ * Containers hamesha <div> hote hain, is liye <div ... </div> ki gehrai gin kar band hone ki jagah dhoondte hain.
+ */
+function rc_home_strip_containers( $html, $ids ) {
+	foreach ( $ids as $id ) {
+		if ( ! preg_match( '/<div\b[^>]*\bdata-id="' . preg_quote( $id, '/' ) . '"[^>]*>/', $html, $m, PREG_OFFSET_CAPTURE ) ) {
+			continue;
+		}
+		$start = $m[0][1];
+		$pos   = $start + strlen( $m[0][0] );
+		$depth = 1;
+		while ( $depth > 0 && preg_match( '#<div\b|</div\s*>#i', $html, $t, PREG_OFFSET_CAPTURE, $pos ) ) {
+			$depth += ( '/' === $t[0][0][1] ) ? -1 : 1;
+			$pos    = $t[0][1] + strlen( $t[0][0] );
+		}
+		if ( 0 === $depth ) {
+			$html = substr( $html, 0, $start ) . substr( $html, $pos );
+		}
+	}
+	return $html;
+}
+
 get_header();
 ?>
 <main id="rc-home" class="rc-home">
@@ -72,20 +95,12 @@ get_header();
 	// New Arrivals ke baad purane Elementor homepage (Home v4, page 1158) ke sections waise hi:
 	// 2 collection cards, category slider, reviews, Discover banner, community aur features.
 	// Upar wale sections (slider, tiles, Best Selling, New Arrivals) hamare apne hain, is liye
-	// Unke Elementor containers (RC_HOME_ELEMENTOR_SKIP) render hi nahi hote.
+	// unke Elementor containers (RC_HOME_ELEMENTOR_SKIP) bane hue HTML se kaat diye jaate hain.
+	// (should_render / builder_content_data filters kaam nahi karte: Elementor page ka HTML cache se deta hai.)
 	if ( did_action( 'elementor/loaded' ) ) {
-		$rc_skip  = function ( $should_render, $element ) {
-			return in_array( $element->get_id(), RC_HOME_ELEMENTOR_SKIP, true ) ? false : $should_render;
-		};
-		$rc_types = array( 'container', 'section', 'e-flexbox' );
-		foreach ( $rc_types as $type ) {
-			add_filter( "elementor/frontend/{$type}/should_render", $rc_skip, 10, 2 );
-		}
 		// get_builder_content_for_display() yahan khaali deta hai: homepage khud page 1158 hai ("recursion" check).
-		echo \Elementor\Plugin::instance()->frontend->get_builder_content( RC_HOME_ELEMENTOR_PAGE, true ); // phpcs:ignore WordPress.Security.EscapeOutput
-		foreach ( $rc_types as $type ) {
-			remove_filter( "elementor/frontend/{$type}/should_render", $rc_skip, 10 );
-		}
+		$rc_html = \Elementor\Plugin::instance()->frontend->get_builder_content( RC_HOME_ELEMENTOR_PAGE, true );
+		echo rc_home_strip_containers( $rc_html, RC_HOME_ELEMENTOR_SKIP ); // phpcs:ignore WordPress.Security.EscapeOutput
 	}
 	?>
 
