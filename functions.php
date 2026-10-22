@@ -68,10 +68,10 @@ define( 'RC_TOP_BANNER', array(
 ) );
 
 /**
- * Sale landing page (page-sale.php). Images Media Library IDs se.
- * Is page par upar ki patti ki jagah Halloween ticker aata hai (sirf yahin).
+ * Homepage (front-page.php). Images Media Library IDs se.
+ * Homepage par upar ki patti ki jagah Halloween ticker aata hai (sirf yahin).
  */
-define( 'RC_SALE_PAGE', array(
+define( 'RC_HOME_PAGE', array(
 	'ticker_desktop' => 3090,
 	'ticker_mobile'  => 3091,
 	'ticker_link'    => '/shop/',
@@ -88,7 +88,7 @@ define( 'RC_SALE_PAGE', array(
 	),
 ) );
 
-function rc_sale_img( $id, $class = '', $alt = '', $size = 'full' ) {
+function rc_home_img( $id, $class = '', $alt = '', $size = 'full' ) {
 	$src = $id ? wp_get_attachment_image_src( $id, $size ) : false;
 	if ( ! $src ) {
 		return '';
@@ -108,7 +108,7 @@ function rc_sale_img( $id, $class = '', $alt = '', $size = 'full' ) {
  * order nahi) New Arrivals ke 4 se alag products, roz badalte hue, taake dono sections
  * ek jaise na hon.
  */
-function rc_sale_best_seller_ids( $limit = 4 ) {
+function rc_home_best_seller_ids( $limit = 4 ) {
 	$top  = wc_get_products( array(
 		'status'   => 'publish',
 		'limit'    => $limit,
@@ -144,7 +144,7 @@ function rc_sale_best_seller_ids( $limit = 4 ) {
 }
 
 // Khaali category par tile ko kisi aur jagah bhejo (jaise abhi Shearling mein product nahi).
-function rc_sale_cat_link( $slug, $fallback ) {
+function rc_home_cat_link( $slug, $fallback ) {
 	$term = get_term_by( 'slug', $slug, 'product_cat' );
 	if ( $term && ! is_wp_error( $term ) && (int) $term->count > 0 ) {
 		return get_term_link( $term );
@@ -157,12 +157,12 @@ add_action( 'wp_body_open', function () {
 		return;
 	}
 	$banner = RC_TOP_BANNER;
-	if ( is_page( 'sale' ) && RC_SALE_PAGE['ticker_desktop'] ) {
+	if ( is_front_page() && RC_HOME_PAGE['ticker_desktop'] ) {
 		$banner = array(
-			'desktop' => RC_SALE_PAGE['ticker_desktop'],
-			'mobile'  => RC_SALE_PAGE['ticker_mobile'],
-			'link'    => RC_SALE_PAGE['ticker_link'],
-			'alt'     => RC_SALE_PAGE['ticker_alt'],
+			'desktop' => RC_HOME_PAGE['ticker_desktop'],
+			'mobile'  => RC_HOME_PAGE['ticker_mobile'],
+			'link'    => RC_HOME_PAGE['ticker_link'],
+			'alt'     => RC_HOME_PAGE['ticker_alt'],
 		);
 	}
 	// Asal size attachment se lo (width/height layout shift rokte hain).
@@ -195,12 +195,13 @@ add_action( 'wp_body_open', function () {
  * /new-arrivals/ ko shop archive ka view banao, taake shop wala sidebar
  * (filters, sorting, pagination) yahan bhi chale. Shortcode pages par filters kaam nahi karte.
  *  - new:  sab se naye pehle, sale wale products nahi
- *  - sale: sirf sale wale products (abhi koi URL nahi; /sale/ ab landing page hai, page-sale.php)
- * Rewrite rules page slugs se pehle ('top') lagti hain. Purana page 3071 fallback hai.
+ *  - sale: sirf sale wale products
+ * Rewrite rules page slugs se pehle ('top') lagti hain. Purane pages (3071, 3072) fallback hain.
  * Is list mein tabdeeli ho to neeche rc_rewrite_version badlo taake rules dobara banein.
  */
 define( 'RC_SHOP_VIEWS', array(
 	'new-arrivals' => array( 'view' => 'new', 'title' => 'New Arrivals' ),
+	'sale'         => array( 'view' => 'sale', 'title' => 'Sale' ),
 ) );
 
 add_filter( 'query_vars', function ( $vars ) {
@@ -213,9 +214,9 @@ add_action( 'init', function () {
 		add_rewrite_rule( '^' . $slug . '/?$', 'index.php?post_type=product&rc_view=' . $cfg['view'], 'top' );
 		add_rewrite_rule( '^' . $slug . '/page/([0-9]{1,})/?$', 'index.php?post_type=product&rc_view=' . $cfg['view'] . '&paged=$matches[1]', 'top' );
 	}
-	if ( get_option( 'rc_rewrite_version' ) !== '2' ) {
+	if ( get_option( 'rc_rewrite_version' ) !== '3' ) {
 		flush_rewrite_rules( false );
-		update_option( 'rc_rewrite_version', '2' );
+		update_option( 'rc_rewrite_version', '3' );
 	}
 } );
 

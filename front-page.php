@@ -1,23 +1,23 @@
 <?php
 /**
- * Sale landing page (/sale/, page slug "sale").
- * WordPress "sale" slug wale page ke liye ye template khud use karta hai (page-{slug}.php).
+ * Homepage (static front page). front-page.php hamesha front page ke liye use hota hai, is liye
+ * Elementor wala "Home v4" (page 1158) ab nahi dikhta; wapas chahiye to ye file hata do.
  * Sections: hero, 4 category tiles, Best Selling, New Arrivals, features.
- * Upar ka Halloween ticker functions.php (RC_SALE_PAGE['ticker_*']) se aata hai.
- * Images Media Library IDs se: RC_SALE_PAGE constant (functions.php).
+ * Upar ka Halloween ticker functions.php (RC_HOME_PAGE['ticker_*']) se aata hai (sirf homepage par).
+ * Images Media Library IDs se: RC_HOME_PAGE constant (functions.php).
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-$cfg = RC_SALE_PAGE;
+$cfg = RC_HOME_PAGE;
 
 get_header();
 ?>
-<main id="rc-sale" class="rc-sale">
+<main id="rc-home" class="rc-home">
 
-	<section class="rc-sale-hero" aria-label="<?php esc_attr_e( 'Halloween sale', 'mixtas-child' ); ?>">
+	<section class="rc-home-hero" aria-label="<?php esc_attr_e( 'Halloween sale', 'mixtas-child' ); ?>">
 		<a href="<?php echo esc_url( home_url( $cfg['hero_link'] ) ); ?>">
 			<?php
 			$hd = wp_get_attachment_image_src( $cfg['hero_desktop'], 'full' );
@@ -34,37 +34,37 @@ get_header();
 		</a>
 	</section>
 
-	<section class="rc-sale-cats rc-wrap" aria-label="<?php esc_attr_e( 'Shop by category', 'mixtas-child' ); ?>">
+	<section class="rc-home-cats rc-wrap" aria-label="<?php esc_attr_e( 'Shop by category', 'mixtas-child' ); ?>">
 		<?php foreach ( $cfg['cats'] as $cat ) : ?>
-			<a class="rc-sale-cat" href="<?php echo esc_url( rc_sale_cat_link( $cat['slug'], $cat['fallback'] ) ); ?>">
-				<?php echo rc_sale_img( $cat['id'], '', $cat['alt'] ); // phpcs:ignore WordPress.Security.EscapeOutput ?>
+			<a class="rc-home-cat" href="<?php echo esc_url( rc_home_cat_link( $cat['slug'], $cat['fallback'] ) ); ?>">
+				<?php echo rc_home_img( $cat['id'], '', $cat['alt'] ); // phpcs:ignore WordPress.Security.EscapeOutput ?>
 			</a>
 		<?php endforeach; ?>
 	</section>
 
-	<section class="rc-sale-products rc-wrap">
-		<header class="rc-sale-heading">
+	<section class="rc-home-products rc-wrap">
+		<header class="rc-home-heading">
 			<span><?php esc_html_e( 'Top Products', 'mixtas-child' ); ?></span>
 			<h2><?php esc_html_e( 'Best Selling', 'mixtas-child' ); ?></h2>
 		</header>
 		<?php
-		$best = rc_sale_best_seller_ids( 4 );
+		$best = rc_home_best_seller_ids( 4 );
 		if ( $best ) {
 			echo do_shortcode( '[products ids="' . esc_attr( implode( ',', $best ) ) . '" columns="4" orderby="post__in"]' ); // phpcs:ignore WordPress.Security.EscapeOutput
 		}
 		?>
 	</section>
 
-	<section class="rc-sale-products rc-wrap">
-		<header class="rc-sale-heading">
+	<section class="rc-home-products rc-wrap">
+		<header class="rc-home-heading">
 			<span><?php esc_html_e( 'Latest Products', 'mixtas-child' ); ?></span>
 			<h2><?php esc_html_e( 'New Arrivals', 'mixtas-child' ); ?></h2>
 		</header>
 		<?php echo do_shortcode( '[products limit="4" columns="4" orderby="date" order="DESC"]' ); // phpcs:ignore WordPress.Security.EscapeOutput ?>
-		<p class="rc-sale-more"><a href="<?php echo esc_url( home_url( '/new-arrivals/' ) ); ?>"><?php esc_html_e( 'View all new arrivals', 'mixtas-child' ); ?></a></p>
+		<p class="rc-home-more"><a href="<?php echo esc_url( home_url( '/new-arrivals/' ) ); ?>"><?php esc_html_e( 'View all new arrivals', 'mixtas-child' ); ?></a></p>
 	</section>
 
-	<section class="rc-sale-features rc-wrap" aria-label="<?php esc_attr_e( 'Why shop with us', 'mixtas-child' ); ?>">
+	<section class="rc-home-features rc-wrap" aria-label="<?php esc_attr_e( 'Why shop with us', 'mixtas-child' ); ?>">
 		<?php
 		$features = array(
 			array( 'truck', 'Free Shipping', 'Free worldwide shipping on orders over $150.' ),
@@ -80,7 +80,7 @@ get_header();
 		);
 		foreach ( $features as $f ) :
 			?>
-			<div class="rc-sale-feature">
+			<div class="rc-home-feature">
 				<svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><?php echo $icons[ $f[0] ]; // phpcs:ignore WordPress.Security.EscapeOutput ?></svg>
 				<h3><?php echo esc_html( $f[1] ); ?></h3>
 				<p><?php echo esc_html( $f[2] ); ?></p>

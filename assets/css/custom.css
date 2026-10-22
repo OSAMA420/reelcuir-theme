@@ -93,55 +93,55 @@ body.page .entry-content .woocommerce ul.products > li.product {
 }
 
 /* =========================================================
- * Sale landing page (page-sale.php)
+ * Homepage (front-page.php)
  * ========================================================= */
-.rc-sale {
+.rc-home {
 	--rc-ink: #111111;
 	--rc-gold: #b08d4f;
 	--rc-muted: #77706a;
 	padding-bottom: 64px;
 }
-.rc-sale .rc-wrap {
+.rc-home .rc-wrap {
 	max-width: 1320px;
 	margin: 0 auto;
 	padding: 0 24px;
 }
-.rc-sale-hero a,
-.rc-sale-hero picture,
-.rc-sale-hero img {
+.rc-home-hero a,
+.rc-home-hero picture,
+.rc-home-hero img {
 	display: block;
 	width: 100%;
 	height: auto;
 }
-.rc-sale-cats {
+.rc-home-cats {
 	display: grid;
 	grid-template-columns: repeat(4, minmax(0, 1fr));
 	gap: 20px;
 	padding-top: 40px !important;
 	padding-bottom: 8px !important;
 }
-.rc-sale-cat {
+.rc-home-cat {
 	display: block;
 	overflow: hidden;
 	border-radius: 6px;
 	line-height: 0;
 }
-.rc-sale-cat img {
+.rc-home-cat img {
 	width: 100%;
 	height: auto;
 	transition: transform .5s ease;
 }
-.rc-sale-cat:hover img {
+.rc-home-cat:hover img {
 	transform: scale(1.04);
 }
-.rc-sale-products {
+.rc-home-products {
 	padding-top: 64px !important;
 }
-.rc-sale-heading {
+.rc-home-heading {
 	text-align: center;
 	margin-bottom: 28px;
 }
-.rc-sale-heading span {
+.rc-home-heading span {
 	display: block;
 	font-size: 12px;
 	letter-spacing: 2px;
@@ -149,34 +149,34 @@ body.page .entry-content .woocommerce ul.products > li.product {
 	color: var(--rc-muted);
 	margin-bottom: 6px;
 }
-.rc-sale-heading h2 {
+.rc-home-heading h2 {
 	margin: 0;
 	font-size: 30px;
 	line-height: 1.2;
 }
-.rc-sale .woocommerce ul.products {
+.rc-home .woocommerce ul.products {
 	display: grid !important;
 	grid-template-columns: repeat(4, minmax(0, 1fr));
 	gap: 36px 24px;
 	margin: 0;
 	padding: 0;
 }
-.rc-sale .woocommerce ul.products::before,
-.rc-sale .woocommerce ul.products::after {
+.rc-home .woocommerce ul.products::before,
+.rc-home .woocommerce ul.products::after {
 	display: none !important;
 }
-.rc-sale .woocommerce ul.products > li.product {
+.rc-home .woocommerce ul.products > li.product {
 	width: auto !important;
 	max-width: none !important;
 	margin: 0 !important;
 	padding: 0 !important;
 	float: none !important;
 }
-.rc-sale-more {
+.rc-home-more {
 	text-align: center;
 	margin: 28px 0 0;
 }
-.rc-sale-more a {
+.rc-home-more a {
 	display: inline-block;
 	padding: 12px 28px;
 	border: 1px solid var(--rc-ink);
@@ -188,71 +188,71 @@ body.page .entry-content .woocommerce ul.products > li.product {
 	text-transform: uppercase;
 	transition: background .2s, color .2s;
 }
-.rc-sale-more a:hover {
+.rc-home-more a:hover {
 	background: var(--rc-ink);
 	color: #fff;
 }
-.rc-sale-features {
+.rc-home-features {
 	display: grid;
 	grid-template-columns: repeat(4, minmax(0, 1fr));
 	gap: 20px;
 	padding-top: 72px !important;
 }
-.rc-sale-feature {
+.rc-home-feature {
 	background: #f5f2ee;
 	border-radius: 8px;
 	padding: 24px;
 }
-.rc-sale-feature svg {
+.rc-home-feature svg {
 	width: 28px;
 	height: 28px;
 	color: var(--rc-gold);
 	margin-bottom: 12px;
 }
-.rc-sale-feature h3 {
+.rc-home-feature h3 {
 	margin: 0 0 6px;
 	font-size: 16px;
 }
-.rc-sale-feature p {
+.rc-home-feature p {
 	margin: 0;
 	font-size: 14px;
 	line-height: 1.5;
 	color: var(--rc-muted);
 }
 @media (max-width: 1199px) {
-	.rc-sale .woocommerce ul.products {
+	.rc-home .woocommerce ul.products {
 		grid-template-columns: repeat(3, minmax(0, 1fr));
 	}
 }
 @media (max-width: 1024px) {
-	.rc-sale-features {
+	.rc-home-features {
 		grid-template-columns: repeat(2, minmax(0, 1fr));
 	}
 }
 @media (max-width: 767px) {
-	.rc-sale .rc-wrap {
+	.rc-home .rc-wrap {
 		padding: 0 16px;
 	}
-	.rc-sale-cats {
+	.rc-home-cats {
 		grid-template-columns: repeat(2, minmax(0, 1fr));
 		gap: 12px;
 		padding-top: 24px !important;
 	}
-	.rc-sale-products {
+	.rc-home-products {
 		padding-top: 44px !important;
 	}
-	.rc-sale-heading h2 {
+	.rc-home-heading h2 {
 		font-size: 24px;
 	}
-	.rc-sale .woocommerce ul.products {
+	.rc-home .woocommerce ul.products {
 		grid-template-columns: repeat(2, minmax(0, 1fr));
 		gap: 24px 12px;
 	}
-	.rc-sale-features {
+	.rc-home-features {
 		gap: 12px;
 		padding-top: 48px !important;
 	}
-	.rc-sale-feature {
+	.rc-home-feature {
 		padding: 18px;
 	}
 }
