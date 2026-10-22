@@ -14,8 +14,9 @@ if ( ! defined( 'ABSPATH' ) ) {
 $cfg = RC_HOME_PAGE;
 
 const RC_HOME_ELEMENTOR_PAGE = 1158;      // purana Elementor homepage
-// Home v4 ke upar wale containers (rev slider, 4 cards, Best Selling, category, New arrivals): inki jagah hamare sections hain
-const RC_HOME_ELEMENTOR_SKIP = array( 'f975fdb', '8586ff5', 'e4b3448', '13d3d5b', 'd51c6f8' );
+// Home v4 ke upar wale containers (rev slider, 4 cards, Best Selling, category, New arrivals): inki jagah hamare sections hain.
+// 05e24fb (category image slider) aur 578acd8 (Happy Customers reviews) user ne hatwaye.
+const RC_HOME_ELEMENTOR_SKIP = array( 'f975fdb', '8586ff5', 'e4b3448', '13d3d5b', 'd51c6f8', '05e24fb', '578acd8' );
 
 /**
  * Elementor HTML se diye gaye data-id wale <div> (poora, andar ke saath) hata do.
