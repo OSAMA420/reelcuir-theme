@@ -103,6 +103,46 @@ function rc_sale_img( $id, $class = '', $alt = '', $size = 'full' ) {
 	);
 }
 
+/**
+ * Best Selling ke product IDs. Asli bikri (total_sales > 0) ho to wahi; warna (abhi koi
+ * order nahi) New Arrivals ke 4 se alag products, roz badalte hue, taake dono sections
+ * ek jaise na hon.
+ */
+function rc_sale_best_seller_ids( $limit = 4 ) {
+	$top  = wc_get_products( array(
+		'status'   => 'publish',
+		'limit'    => $limit,
+		'orderby'  => 'meta_value_num',
+		'meta_key' => 'total_sales', // phpcs:ignore WordPress.DB.SlowDBQuery
+		'order'    => 'DESC',
+		'return'   => 'ids',
+	) );
+	$sold = array_values( array_filter( $top, function ( $id ) {
+		return (int) get_post_meta( $id, 'total_sales', true ) > 0;
+	} ) );
+	if ( count( $sold ) >= $limit ) {
+		return $sold;
+	}
+	$newest = wc_get_products( array(
+		'status'  => 'publish',
+		'limit'   => $limit,
+		'orderby' => 'date',
+		'order'   => 'DESC',
+		'return'  => 'ids',
+	) );
+	$pool = wc_get_products( array(
+		'status'  => 'publish',
+		'limit'   => -1,
+		'exclude' => array_merge( $sold, $newest ),
+		'return'  => 'ids',
+	) );
+	sort( $pool );
+	mt_srand( (int) gmdate( 'Ymd' ) ); // roz naya, lekin din bhar ek jaisa (cache ke saath theek)
+	shuffle( $pool );
+	mt_srand();
+	return array_slice( array_merge( $sold, $pool ), 0, $limit );
+}
+
 // Khaali category par tile ko kisi aur jagah bhejo (jaise abhi Shearling mein product nahi).
 function rc_sale_cat_link( $slug, $fallback ) {
 	$term = get_term_by( 'slug', $slug, 'product_cat' );

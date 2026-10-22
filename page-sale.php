@@ -47,7 +47,12 @@ get_header();
 			<span><?php esc_html_e( 'Top Products', 'mixtas-child' ); ?></span>
 			<h2><?php esc_html_e( 'Best Selling', 'mixtas-child' ); ?></h2>
 		</header>
-		<?php echo do_shortcode( '[products limit="4" columns="4" orderby="popularity"]' ); // phpcs:ignore WordPress.Security.EscapeOutput ?>
+		<?php
+		$best = rc_sale_best_seller_ids( 4 );
+		if ( $best ) {
+			echo do_shortcode( '[products ids="' . esc_attr( implode( ',', $best ) ) . '" columns="4" orderby="post__in"]' ); // phpcs:ignore WordPress.Security.EscapeOutput
+		}
+		?>
 	</section>
 
 	<section class="rc-sale-products rc-wrap">
