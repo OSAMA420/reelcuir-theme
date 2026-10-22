@@ -14,7 +14,8 @@ if ( ! defined( 'ABSPATH' ) ) {
 $cfg = RC_HOME_PAGE;
 
 const RC_HOME_ELEMENTOR_PAGE = 1158;      // purana Elementor homepage
-const RC_HOME_ELEMENTOR_FROM = 'a2efb71'; // pehla container jo New Arrivals ke baad aata tha
+// Home v4 ke upar wale containers (rev slider, 4 cards, Best Selling, category, New arrivals): inki jagah hamare sections hain
+const RC_HOME_ELEMENTOR_SKIP = array( 'f975fdb', '8586ff5', 'e4b3448', '13d3d5b', 'd51c6f8' );
 
 get_header();
 ?>
@@ -71,19 +72,20 @@ get_header();
 	// New Arrivals ke baad purane Elementor homepage (Home v4, page 1158) ke sections waise hi:
 	// 2 collection cards, category slider, reviews, Discover banner, community aur features.
 	// Upar wale sections (slider, tiles, Best Selling, New Arrivals) hamare apne hain, is liye
-	// Elementor data ko RC_HOME_ELEMENTOR_FROM (container id) se kaat kar render karte hain.
+	// Unke Elementor containers (RC_HOME_ELEMENTOR_SKIP) render hi nahi hote.
 	if ( did_action( 'elementor/loaded' ) ) {
-		$rc_slice = function ( $data, $post_id ) {
-			if ( RC_HOME_ELEMENTOR_PAGE !== (int) $post_id || ! is_array( $data ) ) {
-				return $data;
-			}
-			$at = array_search( RC_HOME_ELEMENTOR_FROM, array_column( $data, 'id' ), true );
-			return false === $at ? $data : array_slice( $data, $at );
+		$rc_skip  = function ( $should_render, $element ) {
+			return in_array( $element->get_id(), RC_HOME_ELEMENTOR_SKIP, true ) ? false : $should_render;
 		};
-		add_filter( 'elementor/frontend/builder_content_data', $rc_slice, 10, 2 );
+		$rc_types = array( 'container', 'section', 'e-flexbox' );
+		foreach ( $rc_types as $type ) {
+			add_filter( "elementor/frontend/{$type}/should_render", $rc_skip, 10, 2 );
+		}
 		// get_builder_content_for_display() yahan khaali deta hai: homepage khud page 1158 hai ("recursion" check).
 		echo \Elementor\Plugin::instance()->frontend->get_builder_content( RC_HOME_ELEMENTOR_PAGE, true ); // phpcs:ignore WordPress.Security.EscapeOutput
-		remove_filter( 'elementor/frontend/builder_content_data', $rc_slice, 10 );
+		foreach ( $rc_types as $type ) {
+			remove_filter( "elementor/frontend/{$type}/should_render", $rc_skip, 10 );
+		}
 	}
 	?>
 
