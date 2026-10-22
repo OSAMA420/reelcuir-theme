@@ -218,6 +218,18 @@ body.page .entry-content .woocommerce ul.products > li.product {
 	}
 }
 
+/* Header menu: 9 items (HOODIES ke baad) chhoti laptop screens par do lines mein toot jate the,
+   is liye wahan items ke beech jagah kam. */
+@media (max-width: 1365px) {
+	.elementor-location-header ul.e-n-menu-heading {
+		gap: 6px;
+	}
+	.elementor-location-header ul.e-n-menu-heading > li > .e-n-menu-title {
+		padding-left: 11px;
+		padding-right: 11px;
+	}
+}
+
 /* Header menu: SALE sunehre rang mein (item custom.js se aata hai) */
 .elementor-location-header [data-rc-nav="sale"] .e-n-menu-title-text {
 	color: #b08d4f;
