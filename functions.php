@@ -67,13 +67,67 @@ define( 'RC_TOP_BANNER', array(
 	'alt'     => 'New season arrivals - authentic handcrafted leather jackets for men and women',
 ) );
 
+/**
+ * Sale landing page (page-sale.php). Images Media Library IDs se.
+ * Is page par upar ki patti ki jagah Halloween ticker aata hai (sirf yahin).
+ */
+define( 'RC_SALE_PAGE', array(
+	'ticker_desktop' => 0,
+	'ticker_mobile'  => 0,
+	'ticker_link'    => '/shop/',
+	'ticker_alt'     => 'Halloween Sale',
+	'hero_desktop'   => 0,
+	'hero_mobile'    => 0,
+	'hero_link'      => '/shop/',
+	'hero_alt'       => 'Halloween Sale - leather jackets',
+	'cats'           => array(
+		array( 'id' => 0, 'slug' => 'men-leather-jackets', 'fallback' => '/product-category/men/', 'alt' => "Men's Leather Jacket" ),
+		array( 'id' => 0, 'slug' => 'women-leather-jackets', 'fallback' => '/product-category/women/', 'alt' => "Women's Leather Jacket" ),
+		array( 'id' => 0, 'slug' => 'shearling-leather-jackets', 'fallback' => '/shop/', 'alt' => 'Shearling Leather' ),
+		array( 'id' => 0, 'slug' => 'varsity-jackets', 'fallback' => '/shop/', 'alt' => 'Varsity Jacket' ),
+	),
+) );
+
+function rc_sale_img( $id, $class = '', $alt = '', $size = 'full' ) {
+	$src = $id ? wp_get_attachment_image_src( $id, $size ) : false;
+	if ( ! $src ) {
+		return '';
+	}
+	return sprintf(
+		'<img class="%s" src="%s" width="%d" height="%d" alt="%s" loading="lazy" decoding="async">',
+		esc_attr( $class ),
+		esc_url( $src[0] ),
+		(int) $src[1],
+		(int) $src[2],
+		esc_attr( $alt )
+	);
+}
+
+// Khaali category par tile ko kisi aur jagah bhejo (jaise abhi Shearling mein product nahi).
+function rc_sale_cat_link( $slug, $fallback ) {
+	$term = get_term_by( 'slug', $slug, 'product_cat' );
+	if ( $term && ! is_wp_error( $term ) && (int) $term->count > 0 ) {
+		return get_term_link( $term );
+	}
+	return home_url( $fallback );
+}
+
 add_action( 'wp_body_open', function () {
 	if ( is_admin() ) {
 		return;
 	}
+	$banner = RC_TOP_BANNER;
+	if ( is_page( 'sale' ) && RC_SALE_PAGE['ticker_desktop'] ) {
+		$banner = array(
+			'desktop' => RC_SALE_PAGE['ticker_desktop'],
+			'mobile'  => RC_SALE_PAGE['ticker_mobile'],
+			'link'    => RC_SALE_PAGE['ticker_link'],
+			'alt'     => RC_SALE_PAGE['ticker_alt'],
+		);
+	}
 	// Asal size attachment se lo (width/height layout shift rokte hain).
-	$desktop = wp_get_attachment_image_src( RC_TOP_BANNER['desktop'], 'full' );
-	$mobile  = RC_TOP_BANNER['mobile'] ? wp_get_attachment_image_src( RC_TOP_BANNER['mobile'], 'full' ) : false;
+	$desktop = wp_get_attachment_image_src( $banner['desktop'], 'full' );
+	$mobile  = $banner['mobile'] ? wp_get_attachment_image_src( $banner['mobile'], 'full' ) : false;
 	if ( ! $desktop ) {
 		return;
 	}
@@ -88,25 +142,25 @@ add_action( 'wp_body_open', function () {
 	}
 	printf(
 		'<a class="rc-top-banner" href="%1$s"><picture>%2$s<img src="%3$s" alt="%4$s" width="%5$d" height="%6$d" fetchpriority="high"></picture></a>',
-		esc_url( home_url( RC_TOP_BANNER['link'] ) ),
+		esc_url( home_url( $banner['link'] ) ),
 		$source, // phpcs:ignore WordPress.Security.EscapeOutput -- upar escape hua
 		esc_url( $desktop[0] ),
-		esc_attr( RC_TOP_BANNER['alt'] ),
+		esc_attr( $banner['alt'] ),
 		(int) $desktop[1],
 		(int) $desktop[2]
 	);
 } );
 
 /**
- * /new-arrivals/ aur /sale/ ko shop archive ka view banao, taake shop wala sidebar
+ * /new-arrivals/ ko shop archive ka view banao, taake shop wala sidebar
  * (filters, sorting, pagination) yahan bhi chale. Shortcode pages par filters kaam nahi karte.
  *  - new:  sab se naye pehle, sale wale products nahi
- *  - sale: sirf sale wale products
- * Rewrite rules page slugs se pehle ('top') lagti hain. Purane pages (3071, 3072) fallback hain.
+ *  - sale: sirf sale wale products (abhi koi URL nahi; /sale/ ab landing page hai, page-sale.php)
+ * Rewrite rules page slugs se pehle ('top') lagti hain. Purana page 3071 fallback hai.
+ * Is list mein tabdeeli ho to neeche rc_rewrite_version badlo taake rules dobara banein.
  */
 define( 'RC_SHOP_VIEWS', array(
 	'new-arrivals' => array( 'view' => 'new', 'title' => 'New Arrivals' ),
-	'sale'         => array( 'view' => 'sale', 'title' => 'Sale' ),
 ) );
 
 add_filter( 'query_vars', function ( $vars ) {
@@ -119,9 +173,9 @@ add_action( 'init', function () {
 		add_rewrite_rule( '^' . $slug . '/?$', 'index.php?post_type=product&rc_view=' . $cfg['view'], 'top' );
 		add_rewrite_rule( '^' . $slug . '/page/([0-9]{1,})/?$', 'index.php?post_type=product&rc_view=' . $cfg['view'] . '&paged=$matches[1]', 'top' );
 	}
-	if ( get_option( 'rc_rewrite_version' ) !== '1' ) {
+	if ( get_option( 'rc_rewrite_version' ) !== '2' ) {
 		flush_rewrite_rules( false );
-		update_option( 'rc_rewrite_version', '1' );
+		update_option( 'rc_rewrite_version', '2' );
 	}
 } );
 
