@@ -88,6 +88,18 @@ define( 'RC_HOME_PAGE', array(
 	),
 ) );
 
+// Elementor/theme homepage par apna template zabardasti lagate hain (page 1158 "fullwidth"),
+// is liye sab se aakhir mein front-page.php ko hi chuno.
+add_filter( 'template_include', function ( $template ) {
+	if ( is_front_page() && ! is_home() ) {
+		$ours = get_stylesheet_directory() . '/front-page.php';
+		if ( file_exists( $ours ) ) {
+			return $ours;
+		}
+	}
+	return $template;
+}, PHP_INT_MAX );
+
 function rc_home_img( $id, $class = '', $alt = '', $size = 'full' ) {
 	$src = $id ? wp_get_attachment_image_src( $id, $size ) : false;
 	if ( ! $src ) {
