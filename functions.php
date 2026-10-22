@@ -55,31 +55,44 @@ add_action( 'wp_enqueue_scripts', function () {
 /**
  * Top promo banner: har page par header se upar (theme ka wp_body_open, site-wrapper se pehle).
  * Scroll par baaki header ke saath upar chala jata hai; Elementor ka menu (3565a34) sticky rehta hai.
- * Images Media Library mein hain: desktop 1920x220 (ID 3078), mobile 800x300 (ID 3079).
- * Banner badalna ho to sirf ye IDs aur link badlein.
+ * Images Media Library mein hain: desktop 1920x640 (ID 3080), mobile 1000x625 (ID 3081).
+ * (Purane temporary banners: 3078 / 3079.) Banner badalna ho to sirf ye IDs aur link badlein;
+ * size attachment se khud aata hai. 'mobile' => 0 ho to desktop image har jagah.
  */
 define( 'RC_TOP_BANNER', array(
-	'desktop' => 3078,
-	'mobile'  => 3079,
+	'desktop' => 3080,
+	'mobile'  => 3081,
 	'link'    => '/new-arrivals/',
-	'alt'     => 'New season arrivals - authentic leather jackets for men and women',
+	'alt'     => 'New season arrivals - authentic handcrafted leather jackets for men and women',
 ) );
 
 add_action( 'wp_body_open', function () {
 	if ( is_admin() ) {
 		return;
 	}
-	$desktop = wp_get_attachment_image_url( RC_TOP_BANNER['desktop'], 'full' );
-	$mobile  = wp_get_attachment_image_url( RC_TOP_BANNER['mobile'], 'full' );
+	// Asal size attachment se lo (width/height layout shift rokte hain).
+	$desktop = wp_get_attachment_image_src( RC_TOP_BANNER['desktop'], 'full' );
+	$mobile  = RC_TOP_BANNER['mobile'] ? wp_get_attachment_image_src( RC_TOP_BANNER['mobile'], 'full' ) : false;
 	if ( ! $desktop ) {
 		return;
 	}
+	$source = '';
+	if ( $mobile ) {
+		$source = sprintf(
+			'<source media="(max-width: 767px)" srcset="%s" width="%d" height="%d">',
+			esc_url( $mobile[0] ),
+			(int) $mobile[1],
+			(int) $mobile[2]
+		);
+	}
 	printf(
-		'<a class="rc-top-banner" href="%1$s"><picture>%2$s<img src="%3$s" alt="%4$s" width="1920" height="220" fetchpriority="high"></picture></a>',
+		'<a class="rc-top-banner" href="%1$s"><picture>%2$s<img src="%3$s" alt="%4$s" width="%5$d" height="%6$d" fetchpriority="high"></picture></a>',
 		esc_url( home_url( RC_TOP_BANNER['link'] ) ),
-		$mobile ? '<source media="(max-width: 767px)" srcset="' . esc_url( $mobile ) . '" width="800" height="300">' : '',
-		esc_url( $desktop ),
-		esc_attr( RC_TOP_BANNER['alt'] )
+		$source, // phpcs:ignore WordPress.Security.EscapeOutput -- upar escape hua
+		esc_url( $desktop[0] ),
+		esc_attr( RC_TOP_BANNER['alt'] ),
+		(int) $desktop[1],
+		(int) $desktop[2]
 	);
 } );
 
