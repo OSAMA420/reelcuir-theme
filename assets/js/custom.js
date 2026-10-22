@@ -80,6 +80,19 @@
 		{ key: 'sale', text: 'SALE', href: '/sale/', first: false }
 	];
 
+	// Khaali category ke links ko bhare hue category par bhejo (warna hideEmpty unhein chhupa deta hai).
+	// "Hoodies" (18) khaali hai; client ki hooded leather jackets "Hooded Jackets" (219) mein hain.
+	var LINK_SWAP = {
+		hoodies: '/product-category/hooded-jackets/'
+	};
+
+	function swapLinks() {
+		document.querySelectorAll('.elementor-location-header a[href*="/product-category/"]').forEach(function (a) {
+			var to = LINK_SWAP[slugOf(a.getAttribute('href'))];
+			if (to) a.setAttribute('href', to);
+		});
+	}
+
 	function addNavItems() {
 		document.querySelectorAll('.elementor-location-header ul.e-n-menu-heading').forEach(function (ul) {
 			var template = Array.prototype.find.call(ul.children, function (li) {
@@ -135,6 +148,7 @@
 	function hideEmpty() {
 		rewriteCards();
 		addNavItems();
+		swapLinks();
 		if (!empty.length) return;
 		document.querySelectorAll('.elementor-location-header a[href*="/product-category/"]').forEach(function (a) {
 			if (empty.indexOf(slugOf(a.getAttribute('href'))) === -1) return;
