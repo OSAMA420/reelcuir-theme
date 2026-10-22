@@ -166,6 +166,119 @@
 })();
 
 /*
+ * Shop filters (Nova Ajax Product Filter) + theme infinite scroll fix.
+ * Masla: filter click par plugin page upar scroll karta hai; isi dauraan theme ka infinite
+ * scroll purane (bina filter) "Next" link se page 2 mangwa leta hai, jo filter ke baad aa kar
+ * galat products list mein jod deta hai (Women filter par men's jackets).
+ * Saath hi filter ke baad "Load more" button gayab ho jata tha (agla page kabhi nahi aata), aur
+ * plugin ka novaapfAfterUpdate ek ghair-maujood `ajax_load_items` call kar ke error deta tha.
+ */
+(function ($) {
+	'use strict';
+
+	if (!$) return;
+
+	var BTN = '.products_ajax_button';
+	var filtering = false;
+	var pending = [];
+
+	function isPagedRequest(url) {
+		return /\/page\/\d+\/?/.test(url || '') && url !== window.location.href;
+	}
+
+	// Theme ka infinite scroll jawab mein se `.products > .product` uthata hai, jis mein header ke
+	// search popup ki "Best Sellers" list bhi aa jati hai (duplicate/ghair-mutalliq products).
+	// Jawab mein sirf asli shop list rehne do.
+	function keepMainProducts(html) {
+		if (typeof html !== 'string' || html.indexOf('products') === -1 || !window.DOMParser) return html;
+		var doc = new DOMParser().parseFromString(html, 'text/html');
+		var main = doc.querySelector('.novaapf-before-products ul.products') ||
+			doc.querySelector('.elementor-location-archive ul.products');
+		if (!main) return html;
+		doc.querySelectorAll('ul.products').forEach(function (ul) {
+			if (ul !== main) ul.remove();
+		});
+		return '<!DOCTYPE html>' + doc.documentElement.outerHTML;
+	}
+
+	$.ajaxPrefilter(function (opts) {
+		if ((opts.type || 'GET').toUpperCase() !== 'GET' || !isPagedRequest(opts.url)) return;
+		var original = opts.dataFilter;
+		opts.dataFilter = function (data, type) {
+			if (original) data = original(data, type);
+			return keepMainProducts(data);
+		};
+	});
+
+	// Infinite scroll ki requests yaad rakho; filter ke dauraan nayi request shuru hi na ho.
+	$(document).ajaxSend(function (e, jqXHR, opts) {
+		if ((opts.type || 'GET').toUpperCase() !== 'GET' || !isPagedRequest(opts.url)) return;
+		if (filtering) {
+			jqXHR.abort();
+			return;
+		}
+		pending.push(jqXHR);
+		jqXHR.always(function () {
+			pending = pending.filter(function (x) { return x !== jqXHR; });
+		});
+	});
+
+	function restoreLoadMore() {
+		var type = window.nova_js_var && window.nova_js_var.shop_pagination_type;
+		if (type !== 'infinite_scroll' && type !== 'load_more_button') return;
+		// Plugin ka apna ajax_load_items.init() har filter ke baad bina check naya button jodta hai.
+		// Do buttons hon to ek scroll par dono click hote hain aur agla page do dafa judta hai.
+		$(BTN).slice(1).remove();
+		var $pagination = $('body.woocommerce-shop .woocommerce-pagination');
+		if (!$pagination.length || $(BTN).length) return;
+		var label = (window.nova_js_var && window.nova_js_var.load_more_btn) || 'Load more';
+		$pagination.first().before('<div class="products_ajax_button" data-processing="0"><span>' + $('<i>').text(label).html() + '</span></div>');
+		if (!$('.woocommerce-pagination a.next').length) $(BTN).addClass('disabled');
+	}
+
+	function wrap() {
+		if (window.__rcNovaapfWrapped || typeof window.novaapfBeforeUpdate !== 'function') return;
+		window.__rcNovaapfWrapped = true;
+
+		var before = window.novaapfBeforeUpdate;
+		var after = window.novaapfAfterUpdate;
+
+		window.novaapfBeforeUpdate = function () {
+			filtering = true;
+			$(BTN).attr('data-processing', 1);
+			pending.slice().forEach(function (x) { x.abort(); });
+			pending = [];
+			return before.apply(this, arguments);
+		};
+
+		window.novaapfAfterUpdate = function () {
+			try {
+				if (typeof after === 'function') after.apply(this, arguments);
+			} catch (err) {
+				// Plugin `ajax_load_items.init()` call karta hai jo theme mein nahi hai.
+			} finally {
+				filtering = false;
+				restoreLoadMore();
+				$(BTN).attr('data-processing', 0);
+			}
+		};
+	}
+
+	// Plugin ka naya button $(document).ready ke andar (yani hamare code ke baad) judta hai,
+	// is liye jab bhi doosra button aaye foran hatao.
+	function watchButtons() {
+		var root = document.querySelector('.novaapf-before-products');
+		if (!root || !window.MutationObserver) return;
+		new MutationObserver(function () {
+			if ($(BTN).length > 1) $(BTN).slice(1).remove();
+		}).observe(root.parentNode || root, { childList: true, subtree: true });
+	}
+
+	$(function () { setTimeout(wrap, 0); watchButtons(); });
+	$(window).on('load', wrap);
+})(window.jQuery);
+
+/*
  * Checkout: live feedback.
  * - Sahi bhare field par tick (data-rc-valid)
  * - Step ke saare zaroori fields bhar jayen to number ki jagah ✓ (data-rc-done)
