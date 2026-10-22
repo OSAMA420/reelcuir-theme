@@ -55,13 +55,14 @@ add_action( 'wp_enqueue_scripts', function () {
 /**
  * Top promo banner: har page par header se upar (theme ka wp_body_open, site-wrapper se pehle).
  * Scroll par baaki header ke saath upar chala jata hai; Elementor ka menu (3565a34) sticky rehta hai.
- * Images Media Library mein hain: desktop 1920x640 (ID 3080), mobile 1000x625 (ID 3081).
- * (Purane temporary banners: 3078 / 3079.) Banner badalna ho to sirf ye IDs aur link badlein;
- * size attachment se khud aata hai. 'mobile' => 0 ho to desktop image har jagah.
+ * Images Media Library mein hain: patli patti desktop 1920x180 (ID 3082), mobile 780x200 (ID 3083).
+ * Editable source: Figma file "Réel Cuir – Top Banner".
+ * (Purane: bada designer banner 3080/3081, temporary 3078/3079.) Banner badalna ho to sirf ye
+ * IDs aur link badlein; size attachment se khud aata hai. 'mobile' => 0 ho to desktop image har jagah.
  */
 define( 'RC_TOP_BANNER', array(
-	'desktop' => 3080,
-	'mobile'  => 3081,
+	'desktop' => 3082,
+	'mobile'  => 3083,
 	'link'    => '/new-arrivals/',
 	'alt'     => 'New season arrivals - authentic handcrafted leather jackets for men and women',
 ) );
