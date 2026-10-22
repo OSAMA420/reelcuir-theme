@@ -169,7 +169,8 @@ add_action( 'wp_body_open', function () {
 		return;
 	}
 	$banner = RC_TOP_BANNER;
-	if ( is_front_page() && RC_HOME_PAGE['ticker_desktop'] ) {
+	// Halloween ticker ab har page par (user ka faisla); hatana ho to ticker_desktop 0 kar do, purani patti wapas aa jayegi.
+	if ( RC_HOME_PAGE['ticker_desktop'] ) {
 		$banner = array(
 			'desktop' => RC_HOME_PAGE['ticker_desktop'],
 			'mobile'  => RC_HOME_PAGE['ticker_mobile'],
