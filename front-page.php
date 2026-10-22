@@ -81,7 +81,8 @@ get_header();
 			return false === $at ? $data : array_slice( $data, $at );
 		};
 		add_filter( 'elementor/frontend/builder_content_data', $rc_slice, 10, 2 );
-		echo \Elementor\Plugin::instance()->frontend->get_builder_content_for_display( RC_HOME_ELEMENTOR_PAGE, true ); // phpcs:ignore WordPress.Security.EscapeOutput
+		// get_builder_content_for_display() yahan khaali deta hai: homepage khud page 1158 hai ("recursion" check).
+		echo \Elementor\Plugin::instance()->frontend->get_builder_content( RC_HOME_ELEMENTOR_PAGE, true ); // phpcs:ignore WordPress.Security.EscapeOutput
 		remove_filter( 'elementor/frontend/builder_content_data', $rc_slice, 10 );
 	}
 	?>
