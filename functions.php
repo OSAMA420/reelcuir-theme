@@ -72,19 +72,19 @@ define( 'RC_TOP_BANNER', array(
  * Is page par upar ki patti ki jagah Halloween ticker aata hai (sirf yahin).
  */
 define( 'RC_SALE_PAGE', array(
-	'ticker_desktop' => 0,
-	'ticker_mobile'  => 0,
+	'ticker_desktop' => 3090,
+	'ticker_mobile'  => 3091,
 	'ticker_link'    => '/shop/',
 	'ticker_alt'     => 'Halloween Sale',
-	'hero_desktop'   => 0,
-	'hero_mobile'    => 0,
+	'hero_desktop'   => 3088,
+	'hero_mobile'    => 3089,
 	'hero_link'      => '/shop/',
 	'hero_alt'       => 'Halloween Sale - leather jackets',
 	'cats'           => array(
-		array( 'id' => 0, 'slug' => 'men-leather-jackets', 'fallback' => '/product-category/men/', 'alt' => "Men's Leather Jacket" ),
-		array( 'id' => 0, 'slug' => 'women-leather-jackets', 'fallback' => '/product-category/women/', 'alt' => "Women's Leather Jacket" ),
-		array( 'id' => 0, 'slug' => 'shearling-leather-jackets', 'fallback' => '/shop/', 'alt' => 'Shearling Leather' ),
-		array( 'id' => 0, 'slug' => 'varsity-jackets', 'fallback' => '/shop/', 'alt' => 'Varsity Jacket' ),
+		array( 'id' => 3084, 'slug' => 'men-leather-jackets', 'fallback' => '/product-category/men/', 'alt' => "Men's Leather Jacket" ),
+		array( 'id' => 3087, 'slug' => 'women-leather-jackets', 'fallback' => '/product-category/women/', 'alt' => "Women's Leather Jacket" ),
+		array( 'id' => 3085, 'slug' => 'shearling-leather-jackets', 'fallback' => '/shop/', 'alt' => 'Shearling Leather' ),
+		array( 'id' => 3086, 'slug' => 'varsity-jackets', 'fallback' => '/shop/', 'alt' => 'Varsity Jacket' ),
 	),
 ) );
 
