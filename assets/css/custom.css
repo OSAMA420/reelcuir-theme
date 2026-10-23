@@ -224,6 +224,9 @@ body.page .entry-content .woocommerce ul.products > li.product {
 	.elementor-location-header ul.e-n-menu-heading {
 		gap: 6px;
 	}
+	.elementor-location-header ul.e-n-menu-heading > li {
+		margin-inline-end: 0 !important;
+	}
 	.elementor-location-header ul.e-n-menu-heading > li > .e-n-menu-title {
 		padding-left: 11px;
 		padding-right: 11px;
