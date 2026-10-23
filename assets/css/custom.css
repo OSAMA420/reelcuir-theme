@@ -218,18 +218,25 @@ body.page .entry-content .woocommerce ul.products > li.product {
 	}
 }
 
-/* Header menu: 9 items (HOODIES ke baad) chhoti laptop screens par do lines mein toot jate the,
-   is liye wahan items ke beech jagah kam. */
+/* Header menu: 9 items (HOODIES ke baad) Elementor ki default spacing (16px padding + 17px margin + 17px gap)
+   ke saath 1440px tak do lines mein toot jate the. Spacing ek jagah (gap) se, aur kam. */
+.elementor-location-header ul.e-n-menu-heading {
+	gap: 10px;
+}
+.elementor-location-header ul.e-n-menu-heading > li {
+	margin-inline-end: 0 !important;
+}
+.elementor-location-header ul.e-n-menu-heading > li > .e-n-menu-title {
+	padding-left: 12px;
+	padding-right: 12px;
+}
 @media (max-width: 1365px) {
 	.elementor-location-header ul.e-n-menu-heading {
 		gap: 6px;
 	}
-	.elementor-location-header ul.e-n-menu-heading > li {
-		margin-inline-end: 0 !important;
-	}
 	.elementor-location-header ul.e-n-menu-heading > li > .e-n-menu-title {
-		padding-left: 11px;
-		padding-right: 11px;
+		padding-left: 9px;
+		padding-right: 9px;
 	}
 }
 
