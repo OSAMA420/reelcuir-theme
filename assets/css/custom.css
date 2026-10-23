@@ -218,6 +218,18 @@ body.page .entry-content .woocommerce ul.products > li.product {
 	}
 }
 
+/* Header ki upar wali row: search (497cd000) 477px aur icons (42feb700) 378px ke the, is liye logo
+   center se ~22px right tha aur cart kinare tak nahi pohanchta tha. Dono side columns barabar. */
+.elementor-location-header .elementor-element-497cd000,
+.elementor-location-header .elementor-element-42feb700 {
+	flex: 1 1 0 !important;
+	width: auto !important;
+	max-width: none !important;
+}
+.elementor-location-header .elementor-element-6a04be8c {
+	flex: 0 0 auto !important;
+}
+
 /* Header menu: 9 items (HOODIES ke baad) Elementor ki default spacing (16px padding + 17px margin + 17px gap)
    ke saath 1440px tak do lines mein toot jate the. Spacing ek jagah (gap) se, aur kam. */
 .elementor-location-header ul.e-n-menu-heading {
