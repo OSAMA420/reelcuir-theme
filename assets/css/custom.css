@@ -218,6 +218,12 @@ body.page .entry-content .woocommerce ul.products > li.product {
 	}
 }
 
+/* Header logo: sirf safed "Leather Jacket" logo (media 3094) upload hua hai, aur header safed hai.
+   Logo ek hi rang ka hai, is liye header mein use kaala dikhao. Footer (kaala) mein wahi safed rehta hai. */
+.elementor-location-header .elementor-element-6a04be8c .kitify-logo-default {
+	filter: brightness(0);
+}
+
 /* Header ki upar wali row: search (497cd000) 477px aur icons (42feb700) 378px ke the, is liye logo
    center se ~22px right tha aur cart kinare tak nahi pohanchta tha. Dono side columns barabar.
    Sirf >=1280px: us se chhoti screens (Elementor tablet_extra) par theme ka layout alag hai
