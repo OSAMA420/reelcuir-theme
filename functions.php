@@ -329,6 +329,12 @@ add_action( 'wp_enqueue_scripts', function () {
 }, 30 );
 
 /**
+ * WordPress " - " ko " – " aur "3-5" ko "3–5" bana deta hai (wptexturize), jo product naamon mein
+ * AI jaisa lagta tha. Text jaisa likha hai waisa hi dikhao.
+ */
+add_filter( 'run_wptexturize', '__return_false' );
+
+/**
  * Cart/Checkout speed: ye pages WooCommerce blocks se bante hain, un par slider,
  * Instagram, contact form, mega menu aur classic cart ki files ka koi kaam nahi.
  */
